@@ -1,0 +1,36 @@
+{
+
+  "name": "kun391/yii2-paypal",
+
+  "description": "Process with Paypal",
+
+  "keywords": ["paypal", "api", "yii2"],
+
+  "homepage": "https://github.com/kun391/yii2-paypal",
+
+  "authors": [
+    {
+      "name": "Thanh Nguyen",
+      "email": "nguyentruongthanh.dn@gmail.com",
+      "homepage": "https://github.com/kun391",
+      "role": "developer"
+    }
+  ],
+
+  "type": "library",
+
+  "require": {
+    "paypal/rest-api-sdk-php": "*"
+  },
+
+  "require-dev": {
+    "phpunit/phpunit": "*"
+  },
+
+  "autoload": {
+    "psr-4": {
+        "kun391\\yii2-paypal": "lib"
+    }
+  }
+
+}

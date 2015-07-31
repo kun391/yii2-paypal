@@ -1,6 +1,6 @@
 <?php
 
-namespace kun391\yii2-paypal;
+namespace kun391\paypal;
 
 use PayPal\Service\AdaptiveAccountsService;
 use PayPal\Types\AA\AccountIdentifierType;

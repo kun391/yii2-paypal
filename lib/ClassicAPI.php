@@ -14,19 +14,9 @@ use yii\base\Component;
 
 class ClassicAPI extends Component
 {
-    public $mode;
-    public $userName;
-    public $password;
-    public $signature;
     public $_credentials;
 
-    public $setting = [
-        'acct1.UserName'  => 'nguyentruongthanh.dn-facilitator-1_api1.gmail.com',
-        'acct1.Password'  => 'GRHYUV2DJHNBFTAA',
-        'acct1.Signature' => 'APP9kKh6roKmPNKj6yBK5oSwdD39ADujX4sfPXjr.hGf1wjRi1THwoVq',
-        'mode'            => 'sandbox',
-    ];
-
+    public $pathFileConfig;
     /**
      * @param  $config
      * @return mixed
@@ -35,19 +25,18 @@ class ClassicAPI extends Component
     {
         parent::__construct($config);
 
-        if (!in_array($this->mode, ['sandbox', 'live'])) {
-            throw new \Exception("Error Processing Request", 503);
+        if (!$this->pathFileConfig) {
+            $this->pathFileConfig = __DIR__ . '/config-classic.php';
         }
 
-        if (!$this->mode || !$this->userName || !$this->password || !$this->signature) {
-            $this->_credentials = $this->setting;
-        } else {
-            $this->_credentials = [
-                'acct1.UserName'  => $this->userName,
-                'acct1.Password'  => $this->password,
-                'acct1.Signature' => $this->signature,
-                'mode'            => $this->mode,
-            ];
+        if (!file_exists(__DIR__ . '/config-classic.php')) {
+            throw new \Exception("File config does not exist.", 500);
+        }
+
+        $this->_credentials = require($this->pathFileConfig);
+
+        if (!in_array($this->_credentials['mode'], ['sandbox', 'live'])) {
+            throw new \Exception("Error Processing Request", 503);
         }
 
         return $this->_credentials;

@@ -19,7 +19,7 @@ or
 
 Add to to you Yii2 config file this part with component settings:
 
-- Create file config.php for RESTAPI and config.php for Classic API every where:
+1. Create file config.php for RESTAPI and config.php for Classic API every where:
 
 - ClassicAPI
 
@@ -105,7 +105,7 @@ return \yii\helpers\ArrayHelper::merge(['config' => [
 
 ```
 
-- Add to config to component of file main.php:
+2. Add to config to component of file main.php:
 
 ```php
 ...

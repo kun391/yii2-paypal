@@ -1,4 +1,3 @@
-# yii2-paypal
 Process with paypal for Yii2
 =========
 

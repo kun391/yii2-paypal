@@ -19,7 +19,7 @@ or
 
 Add to to you Yii2 config file this part with component settings:
 
-1. Create file config.php for RESTAPI and config.php for Classic API every where:
+> Create file config.php for RESTAPI and config.php for Classic API every where:
 
 - ClassicAPI
 
@@ -105,7 +105,7 @@ return \yii\helpers\ArrayHelper::merge(['config' => [
 
 ```
 
-2. Add to config to component of file main.php:
+> Add to config to component of file main.php:
 
 ```php
 ...
@@ -127,7 +127,7 @@ return \yii\helpers\ArrayHelper::merge(['config' => [
 Usage
 ====
 
-1. REST API
+> REST API
 
 - Create a invoice with paypal
 
@@ -182,7 +182,7 @@ $response = Yii::$app->payPalRest->getLinkCheckOut($params);
 
 ```
 
-2. CLASSIC API
+> CLASSIC API
 
 - Get Information Account
 

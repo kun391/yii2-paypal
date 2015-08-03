@@ -131,55 +131,76 @@ Usage
 - Create a invoice with paypal
 
 ```
-    //define params for request 
-    $params = [
-        'currency' => 'Usd', // only support currency same PayPal
-        'email' => 'nguyentruongthanh.dn@gmail.com',
-        'items' => [
-            [
-                'name' => 'Vinamilk',
-                'quantity' => 2,
-                'price' => 100
-            ],
-            [
-                'name' => 'Pepsi',
-                'quantity' => 3,
-                'price' => 90
-            ]
+//define params for request 
+$params = [
+    'currency' => 'Usd', // only support currency same PayPal
+    'email' => 'nguyentruongthanh.dn@gmail.com',
+    'items' => [
+        [
+            'name' => 'Vinamilk',
+            'quantity' => 2,
+            'price' => 100
+        ],
+        [
+            'name' => 'Pepsi',
+            'quantity' => 3,
+            'price' => 90
         ]
-    ];
+    ]
+];
 
-    // information invoice response
-    $response = Yii::$app->payPalRest->createInvoice($params);
+// information invoice response
+$response = Yii::$app->payPalRest->createInvoice($params);
 
 ```
 
 - Get link checkout on PayPal
 
 ```
-    //define params for request 
-    $params = [
-            'currency' => 'USD', // only support currency same PayPal
-            'description' => 'Buy some item',
-            'total_price' => 470,
-            'email' => 'nguyentruongthanh.dn@gmail.com',
-            'items' => [
-                [
-                    'name' => 'Vinamilk',
-                    'quantity' => 2,
-                    'price' => 100
-                ],
-                [
-                    'name' => 'Pepsi',
-                    'quantity' => 3,
-                    'price' => 90
-                ]
-            ]
-        ];
-    $response = Yii::$app->payPalRest->getLinkCheckOut($params);
+//define params for request 
+$params = [
+    'currency' => 'USD', // only support currency same PayPal
+    'description' => 'Buy some item',
+    'total_price' => 470,
+    'email' => 'nguyentruongthanh.dn@gmail.com',
+    'items' => [
+        [
+            'name' => 'Vinamilk',
+            'quantity' => 2,
+            'price' => 100
+        ],
+        [
+            'name' => 'Pepsi',
+            'quantity' => 3,
+            'price' => 90
+        ]
+    ]
+];
+
+$response = Yii::$app->payPalRest->getLinkCheckOut($params);
 
 ```
 
 2. CLASSIC API
 
 - Get Information Account
+
+```
+$params = [
+    'email' => 'nguyentruongthanh.dn@gmail.com',
+    'firstName' => 'Thanh',
+    'lastName'  => 'Nguyen'
+];
+
+$response = Yii::$app->payPalClassic->getAccountInfo($params);
+```
+
+- Send money (Mass Pay)
+```
+$params = [
+    'email' => 'nguyentruongthanh.dn@gmail.com',
+    'balance' => 200,
+];
+
+$response = Yii::$app->payPalClassic->sendMoney($params);
+``

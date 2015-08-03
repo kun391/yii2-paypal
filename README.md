@@ -23,7 +23,7 @@ Add to to you Yii2 config file this part with component settings:
 
 - ClassicAPI
 
- ```
+```
 <?php
 
 /**
@@ -56,7 +56,7 @@ return  [
     'mode'            => 'sandbox',
 ];
 
- ```
+```
 
 - RestAPI
 
@@ -106,6 +106,7 @@ return \yii\helpers\ArrayHelper::merge(['config' => [
 ```
 
 - Add to config to component of file main.php:
+
 ```php
 ...
 'payPalClassic'    => [
@@ -196,6 +197,7 @@ $response = Yii::$app->payPalClassic->getAccountInfo($params);
 ```
 
 - Send money (Mass Pay)
+
 ```
 $params = [
     'email' => 'nguyentruongthanh.dn@gmail.com',

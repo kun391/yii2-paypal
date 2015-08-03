@@ -9,6 +9,13 @@ use PayPal\Api\MerchantInfo;
 use PayPal\Api\BillingInfo;
 use PayPal\Api\InvoiceItem;
 use PayPal\Api\Phone;
+use PayPal\Api\Payer;
+use PayPal\Api\Item;
+use PayPal\Api\ItemList;
+use PayPal\Api\Amount;
+use PayPal\Api\Transaction;
+use PayPal\Api\RedirectUrls;
+use PayPal\Api\Payment;
 use PayPal\Api\Address;
 use PayPal\Api\Currency;
 use yii\base\Component;
@@ -17,6 +24,9 @@ class RestAPI extends Component
 {
     public $_apiContext;
     public $_credentials;
+
+    public $successUrl = "";
+    public $cancelUrl = "";
 
     public $pathFileConfig;
     /**
@@ -27,14 +37,17 @@ class RestAPI extends Component
     {
         parent::__construct($config);
 
+        //set config default for paypal
         if (!$this->pathFileConfig) {
             $this->pathFileConfig = __DIR__ . '/config-rest.php';
         }
+
         // check file config already exist.
-        if (!file_exists(__DIR__ . '/config-rest.php')) {
+        if (!file_exists($this->pathFileConfig)) {
             throw new \Exception("File config does not exist.", 500);
         }
 
+        //set config file
         $this->_credentials = require($this->pathFileConfig);
 
         if (!in_array($this->_credentials['config']['mode'], ['sandbox', 'live'])) {
@@ -75,14 +88,30 @@ class RestAPI extends Component
         return $this->_apiContext;
     }
 
-    public function createInvoice($attributes = null)
+    private function getBaseUrl()
     {
-        if (!$attributes) {
+        if (PHP_SAPI == 'cli') {
+            $trace=debug_backtrace();
+            $relativePath = substr(dirname($trace[0]['file']), strlen(dirname(dirname(__FILE__))));
+            echo "Warning: This sample may require a server to handle return URL. Cannot execute in command line. Defaulting URL to http://localhost$relativePath \n";
+            return "http://localhost" . $relativePath;
+        }
+        $protocol = 'http';
+        if ($_SERVER['SERVER_PORT'] == 443 || (!empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on')) {
+            $protocol .= 's';
+        }
+        $host = $_SERVER['HTTP_HOST'];
+        $request = $_SERVER['PHP_SELF'];
+        return dirname($protocol . '://' . $host . $request);
+    }
+
+    public function createInvoice($params = null)
+    {
+        if (!$params) {
             return false;
         }
 
         $invoice = new Invoice();
-
         // ### Invoice Info
         // Fill in all the information that is
         // required for invoice APIs
@@ -100,19 +129,22 @@ class RestAPI extends Component
         // ### Billing Information
         // Set the email address for each billing
         $billing = $invoice->getBillingInfo();
-        $billing[0]->setEmail('nguyentruongthanh.dn@gmail.com');
+        $billing[0]->setEmail($params['email']);
 
+        $items = [];
+        foreach ($params['items'] as $key => $item) {
+            # code...
+            $items[$key] = new InvoiceItem();
+            $items[$key]
+                ->setName($item['name'])
+                ->setQuantity($item['quantity'])
+                ->setUnitPrice(new Currency());
+            $items[$key]->getUnitPrice()
+                ->setCurrency($params['currency'])
+                ->setValue((double) $item['price']);
+        }
         // ### Items List
-        $items = array();
-        $items[0] = new InvoiceItem();
-
-        $items[0]
-            ->setName("Product Transaction")->setQuantity(2)->setUnitPrice(new Currency());
-
-        $items[0]->getUnitPrice()->setCurrency('USD')->setValue(200);
-
         $invoice->setItems($items);
-        // For Sample Purposes Only.
         $request = clone $invoice;
 
         try {
@@ -122,6 +154,80 @@ class RestAPI extends Component
         }
 
         return $invoice;
+    }
+
+    public function getLinkCheckOut($params = null)
+    {
+        if (!$params) {
+            return false;
+        }
+
+         /*Payer
+         A resource representing a Payer that funds a payment
+         For paypal account payments, set payment method
+         to 'paypal'.
+         */
+        $payer = new Payer();
+        $payer->setPaymentMethod("paypal");
+
+        $itemList = new ItemList();
+        // Item must be a array and has one or more item.
+        if (!$params['items']) {
+            return false;
+        }
+        $arrItem = [];
+        foreach ($params['items'] as $key => $item) {
+            $it = new Item();
+            $it->setName($item['name'])
+                ->setCurrency($params['currency'])
+                ->setQuantity($item['quantity'])
+                ->setPrice($item['price']);
+            $arrItem[] = $it;
+        }
+        $itemList->setItems($arrItem);
+
+        $amount = new Amount();
+        $amount->setCurrency($params['currency'])
+               ->setTotal($params['total_price']);
+
+        $transaction = new Transaction();
+        $transaction->setAmount($amount)
+                    ->setItemList($itemList)
+                    ->setDescription($params['description']);
+
+        // ### Redirect urls
+        // Set the urls that the buyer must be redirected to after
+        // payment approval/ cancellation.
+        $redirectUrls = new RedirectUrls();
+        $baseUrl = $this->getBaseUrl();
+        $redirectUrls->setReturnUrl($baseUrl . $this->successUrl)
+                     ->setCancelUrl($baseUrl . $this->cancelUrl);
+        // ### Payment
+        // A Payment Resource; create one using
+        // the above types and intent set to 'sale'
+        $payment = new Payment();
+        $payment->setIntent("sale")
+                ->setPayer($payer)
+                ->setRedirectUrls($redirectUrls)
+                ->setTransactions([$transaction]);
+
+        // ### Create Payment
+        // Create a payment by calling the 'create' method
+        // passing it a valid apiContext.
+        try {
+            $payment->create($this->config);
+        } catch (PayPal\Exception\PPConnectionException $ex) {
+            throw new \DataErrorException($ex->getData(), $ex->getMessage());
+        }
+        // ### Get redirect url
+        $redirectUrl = $payment->getApprovalLink();
+
+        return [
+            'payment_id' => $payment->getId(),
+            'status' => $payment->getState(),
+            'redirect_url' => $redirectUrl,
+            'description' => $transaction->getDescription(),
+        ];
     }
 
 }

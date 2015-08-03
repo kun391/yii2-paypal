@@ -21,7 +21,7 @@
 
   "require": {
     "paypal/rest-api-sdk-php": "*",
-    "paypal/adaptiveaccounts-sdk-php":"*",
+    "paypal/adaptiveaccounts-sdk-php": "*",
     "paypal/merchant-sdk-php": "*"
   },
 

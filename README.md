@@ -23,7 +23,7 @@ Add to to you Yii2 config file this part with component settings:
 
 - ClassicAPI
 
- ```
+```
 <?php
 
 /**
@@ -55,8 +55,7 @@ return  [
     'acct1.Signature' => 'APP9kKh6roKmPNKj6yBK5oSwdD39ADujX4sfPXjr.hGf1wjRi1THwoVq',
     'mode'            => 'sandbox',
 ];
-
- ```
+```
 
 - RestAPI
 
@@ -131,9 +130,37 @@ Usage
 - Create a invoice with paypal
 
 ```
-    //define params for request 
-    $params = [
-        'currency' => 'Usd', // only support currency same PayPal
+//define params for request 
+$params = [
+    'currency' => 'Usd', // only support currency same PayPal
+    'email' => 'nguyentruongthanh.dn@gmail.com',
+    'items' => [
+        [
+            'name' => 'Vinamilk',
+            'quantity' => 2,
+            'price' => 100
+        ],
+        [
+            'name' => 'Pepsi',
+            'quantity' => 3,
+            'price' => 90
+        ]
+    ]
+];
+
+// information invoice response
+$response = Yii::$app->payPalRest->createInvoice($params);
+
+```
+
+- Get link checkout on PayPal
+
+```
+//define params for request 
+$params = [
+        'currency' => 'USD', // only support currency same PayPal
+        'description' => 'Buy some item',
+        'total_price' => 470,
         'email' => 'nguyentruongthanh.dn@gmail.com',
         'items' => [
             [
@@ -148,35 +175,7 @@ Usage
             ]
         ]
     ];
-
-    // information invoice response
-    $response = Yii::$app->payPalRest->createInvoice($params);
-
-```
-
-- Get link checkout on PayPal
-
-```
-    //define params for request 
-    $params = [
-            'currency' => 'USD', // only support currency same PayPal
-            'description' => 'Buy some item',
-            'total_price' => 470,
-            'email' => 'nguyentruongthanh.dn@gmail.com',
-            'items' => [
-                [
-                    'name' => 'Vinamilk',
-                    'quantity' => 2,
-                    'price' => 100
-                ],
-                [
-                    'name' => 'Pepsi',
-                    'quantity' => 3,
-                    'price' => 90
-                ]
-            ]
-        ];
-    $response = Yii::$app->payPalRest->getLinkCheckOut($params);
+$response = Yii::$app->payPalRest->getLinkCheckOut($params);
 
 ```
 

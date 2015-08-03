@@ -20,7 +20,9 @@
   "type": "library",
 
   "require": {
-    "paypal/rest-api-sdk-php": "*"
+    "paypal/rest-api-sdk-php": "*",
+    "paypal/adaptiveaccounts-sdk-php":"*",
+    "paypal/merchant-sdk-php": "*"
   },
 
   "require-dev": {

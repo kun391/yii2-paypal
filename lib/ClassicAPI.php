@@ -21,15 +21,14 @@ class ClassicAPI extends Component
      * @param  $config
      * @return mixed
      */
-    public function __construct($config = [])
+    public function init()
     {
-        parent::__construct($config);
+        parent::init();
 
          //set config default for paypal
         if (!$this->pathFileConfig) {
             $this->pathFileConfig = __DIR__ . '/config-classic.php';
         }
-
         // check file config already exist.
         if (!file_exists($this->pathFileConfig)) {
             throw new \Exception("File config does not exist.", 500);
@@ -42,6 +41,11 @@ class ClassicAPI extends Component
         }
 
         return $this->_credentials;
+    }
+
+    public function setConfig()
+    {
+        $this->init();
     }
 
     /**

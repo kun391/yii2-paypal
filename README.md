@@ -1,5 +1,6 @@
 Process Payment with paypal for Yii2
 =========
+[![Build Status](https://travis-ci.org/kun391/yii2-paypal.svg?branch=master)](https://travis-ci.org/kun391/yii2-paypal)
 
 Installation
 ====

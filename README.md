@@ -1,4 +1,4 @@
-Process with paypal for Yii2
+Process Payment with paypal for Yii2
 =========
 
 Installation
@@ -22,9 +22,7 @@ Add to to you Yii2 config file this part with component settings:
 
 - ClassicAPI
 
-```
-<?php
-
+```php
 /**
  * Information PAYPAL's enviroments for classic API
  * @var string
@@ -59,9 +57,7 @@ return  [
 
 - RestAPI
 
-```
-<?php
-
+```php
 /**
  * Information PAYPAL's enviroments
  * @var string
@@ -100,8 +96,6 @@ return \yii\helpers\ArrayHelper::merge(['config' => [
         'log.LogLevel'           => 'FINE',
     ]
 ], $setting);
-
-
 ```
 
 > Add to config to component of file main.php:
@@ -130,7 +124,7 @@ Usage
 
 - Create a invoice with paypal
 
-```
+```php
 //define params for request 
 $params = [
     'currency' => 'Usd', // only support currency same PayPal
@@ -151,12 +145,11 @@ $params = [
 
 // information invoice response
 $response = Yii::$app->payPalRest->createInvoice($params);
-
 ```
 
 - Get link checkout on PayPal
 
-```
+```php
 //define params for request 
 $params = [
     'currency' => 'USD', // only support currency same PayPal
@@ -178,14 +171,13 @@ $params = [
 ];
 
 $response = Yii::$app->payPalRest->getLinkCheckOut($params);
-
 ```
 
 > CLASSIC API
 
 - Get Information Account
 
-```
+```php
 $params = [
     'email' => 'nguyentruongthanh.dn@gmail.com',
     'firstName' => 'Thanh',
@@ -197,7 +189,7 @@ $response = Yii::$app->payPalClassic->getAccountInfo($params);
 
 - Send money (Mass Pay)
 
-```
+```php
 $params = [
     'email' => 'nguyentruongthanh.dn@gmail.com',
     'balance' => 200,

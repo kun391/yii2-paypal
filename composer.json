@@ -26,6 +26,7 @@
   },
 
   "require-dev": {
+    "bower-asset/jquery": "*",
     "yiisoft/yii2": ">=2.0.4",
     "fzaninotto/faker": "~1.4",
     "mockery/mockery": "0.9.*",

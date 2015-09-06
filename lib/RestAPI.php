@@ -14,6 +14,7 @@ use PayPal\Api\Item;
 use PayPal\Api\ItemList;
 use PayPal\Api\Amount;
 use PayPal\Api\Transaction;
+use PayPal\Api\PaymentExecution;
 use PayPal\Api\RedirectUrls;
 use PayPal\Api\Payment;
 use PayPal\Api\Address;
@@ -228,6 +229,18 @@ class RestAPI extends Component
             'redirect_url' => $redirectUrl,
             'description' => $transaction->getDescription(),
         ];
+    }
+
+    public function getResult($paymentId) {
+
+        $payment = Payment::get($paymentId, $this->config);
+
+        $execution = new PaymentExecution();
+        $execution->setPayerId($_GET['PayerID']);
+        $payment = $payment->execute($execution, $this->config);
+
+        $result = @$payment->toArray();
+        return $result;
     }
 
 }

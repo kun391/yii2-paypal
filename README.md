@@ -179,8 +179,13 @@ $response = Yii::$app->payPalRest->getLinkCheckOut($params);
 - Get Information Account
 
 ```php
+
+Attribute matchCriteria you can specify either NAME or NONE. Default: None
+Attribute firstName and lastName (Required) if matchCriteria is name.
+
 $params = [
     'email' => 'nguyentruongthanh.dn@gmail.com',
+    'matchCriteria' => 'name',
     'firstName' => 'Thanh',
     'lastName'  => 'Nguyen'
 ];

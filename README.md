@@ -1,6 +1,11 @@
 Process Payment with paypal for Yii2
 =========
+
 [![Build Status](https://travis-ci.org/kun391/yii2-paypal.svg?branch=master)](https://travis-ci.org/kun391/yii2-paypal)
+[![Latest Stable Version](https://poser.pugx.org/johnitvn/yii2-rbac-plus/v/stable)](packagist.org/packages/kun391/yii2-paypal)
+[![Total Downloads](https://poser.pugx.org/johnitvn/yii2-rbac-plus/downloads)](packagist.org/packages/kun391/yii2-paypal)
+[![Monthly Downloads](https://poser.pugx.org/johnitvn/yii2-rbac-plus/d/monthly)](packagist.org/packages/kun391/yii2-paypal)
+[![Daily Downloads](https://poser.pugx.org/johnitvn/yii2-rbac-plus/d/daily)](packagist.org/packages/kun391/yii2-paypal)
 
 Installation
 ====

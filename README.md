@@ -7,6 +7,11 @@ Process Payment with paypal for Yii2
 [![Monthly Downloads](https://poser.pugx.org/kun391/yii2-paypal/d/monthly)](https://packagist.org/packages/kun391/yii2-paypal)
 [![Daily Downloads](https://poser.pugx.org/kun391/yii2-paypal/d/daily)](https://packagist.org/packages/kun391/yii2-paypal)
 
+Requirements
+====
+- PHP >= 5.4
+- php5-curl (System)
+
 Installation
 ====
 

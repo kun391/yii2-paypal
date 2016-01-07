@@ -148,13 +148,26 @@ class RestAPI extends Component
         $invoice->setItems($items);
         $request = clone $invoice;
 
+        $errors = [];
         try {
             $invoice->create($this->config);
+        } catch (PayPal\Exception\PayPalConnectionException $ex) {
+            $errors = [
+                'code'    => $ex->getCode(),
+                'data'    => $ex->getData(),
+                'message' => $ex->getMessage()
+            ];
         } catch (\Exception $ex) {
-            return $ex;
+            $errors = [
+                'code'    => $ex->getCode(),
+                'message' => $ex->getMessage()
+            ];
         }
 
-        return $invoice;
+        return [
+            'errors'    => $errors,
+            'invoices'  => $invoice
+        ];
     }
 
     public function getLinkCheckOut($params = null)
@@ -173,9 +186,10 @@ class RestAPI extends Component
 
         $itemList = new ItemList();
         // Item must be a array and has one or more item.
-        if (!$params['items']) {
+        if (!$params['items'] || !isset($params['total_price'])) {
             return false;
         }
+        $errors = [];
         $arrItem = [];
         foreach ($params['items'] as $key => $item) {
             $it = new Item();
@@ -200,9 +214,20 @@ class RestAPI extends Component
         // Set the urls that the buyer must be redirected to after
         // payment approval/ cancellation.
         $redirectUrls = new RedirectUrls();
+
         $baseUrl = $this->getBaseUrl();
-        $redirectUrls->setReturnUrl($baseUrl . $this->successUrl)
-                     ->setCancelUrl($baseUrl . $this->cancelUrl);
+
+        try {
+            $redirectUrls->setReturnUrl($baseUrl . $this->successUrl)
+                         ->setCancelUrl($baseUrl . $this->cancelUrl);
+        } catch (\InvalidArgumentException $ex) {
+            return [
+                'errors'        => [
+                    'code'    => $ex->getCode(),
+                    'message' => $ex->getMessage()
+                ]
+            ];
+        }
         // ### Payment
         // A Payment Resource; create one using
         // the above types and intent set to 'sale'
@@ -215,7 +240,6 @@ class RestAPI extends Component
         // ### Create Payment
         // Create a payment by calling the 'create' method
         // passing it a valid apiContext.
-        $errors = [];
         try {
             $payment->create($this->config);
             // ### Get redirect url

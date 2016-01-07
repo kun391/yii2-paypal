@@ -26,8 +26,8 @@ class RestAPI extends Component
     public $_apiContext;
     public $_credentials;
 
-    public $successUrl = "";
-    public $cancelUrl = "";
+    public $successUrl = '';
+    public $cancelUrl = '';
 
     public $pathFileConfig;
     /**
@@ -45,14 +45,14 @@ class RestAPI extends Component
 
         // check file config already exist.
         if (!file_exists($this->pathFileConfig)) {
-            throw new \Exception("File config does not exist.", 500);
+            throw new \Exception('File config does not exist.', 500);
         }
 
         //set config file
         $this->_credentials = require($this->pathFileConfig);
 
         if (!in_array($this->_credentials['config']['mode'], ['sandbox', 'live'])) {
-            throw new \Exception("Error Processing Request", 503);
+            throw new \Exception('Error Processing Request', 503);
         }
 
         return $this->_credentials;
@@ -94,8 +94,8 @@ class RestAPI extends Component
         if (PHP_SAPI == 'cli') {
             $trace=debug_backtrace();
             $relativePath = substr(dirname($trace[0]['file']), strlen(dirname(dirname(__FILE__))));
-            echo "Warning: This sample may require a server to handle return URL. Cannot execute in command line. Defaulting URL to http://localhost$relativePath \n";
-            return "http://localhost" . $relativePath;
+            echo 'Warning: This sample may require a server to handle return URL. Cannot execute in command line. Defaulting URL to http://localhost$relativePath \n';
+            return 'http://localhost' . $relativePath;
         }
         $protocol = 'http';
         if ($_SERVER['SERVER_PORT'] == 443 || (!empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on')) {
@@ -148,13 +148,26 @@ class RestAPI extends Component
         $invoice->setItems($items);
         $request = clone $invoice;
 
+        $errors = [];
         try {
             $invoice->create($this->config);
+        } catch (PayPal\Exception\PayPalConnectionException $ex) {
+            $errors = [
+                'code'    => $ex->getCode(),
+                'data'    => $ex->getData(),
+                'message' => $ex->getMessage()
+            ];
         } catch (\Exception $ex) {
-            return $ex;
+            $errors = [
+                'code'    => $ex->getCode(),
+                'message' => $ex->getMessage()
+            ];
         }
 
-        return $invoice;
+        return [
+            'errors'    => $errors,
+            'invoices'  => $invoice
+        ];
     }
 
     public function getLinkCheckOut($params = null)
@@ -169,13 +182,14 @@ class RestAPI extends Component
          to 'paypal'.
          */
         $payer = new Payer();
-        $payer->setPaymentMethod("paypal");
+        $payer->setPaymentMethod('paypal');
 
         $itemList = new ItemList();
         // Item must be a array and has one or more item.
-        if (!$params['items']) {
+        if (!$params['items'] || !isset($params['total_price'])) {
             return false;
         }
+        $errors = [];
         $arrItem = [];
         foreach ($params['items'] as $key => $item) {
             $it = new Item();
@@ -200,14 +214,25 @@ class RestAPI extends Component
         // Set the urls that the buyer must be redirected to after
         // payment approval/ cancellation.
         $redirectUrls = new RedirectUrls();
+
         $baseUrl = $this->getBaseUrl();
-        $redirectUrls->setReturnUrl($baseUrl . $this->successUrl)
-                     ->setCancelUrl($baseUrl . $this->cancelUrl);
+
+        try {
+            $redirectUrls->setReturnUrl($baseUrl . $this->successUrl)
+                         ->setCancelUrl($baseUrl . $this->cancelUrl);
+        } catch (\InvalidArgumentException $ex) {
+            return [
+                'errors'        => [
+                    'code'    => $ex->getCode(),
+                    'message' => $ex->getMessage()
+                ]
+            ];
+        }
         // ### Payment
         // A Payment Resource; create one using
         // the above types and intent set to 'sale'
         $payment = new Payment();
-        $payment->setIntent("sale")
+        $payment->setIntent('sale')
                 ->setPayer($payer)
                 ->setRedirectUrls($redirectUrls)
                 ->setTransactions([$transaction]);
@@ -217,17 +242,27 @@ class RestAPI extends Component
         // passing it a valid apiContext.
         try {
             $payment->create($this->config);
-        } catch (PayPal\Exception\PPConnectionException $ex) {
-            throw new \DataErrorException($ex->getData(), $ex->getMessage());
+            // ### Get redirect url
+            $redirectUrl = $payment->getApprovalLink();
+        } catch (PayPal\Exception\PayPalConnectionException $ex) {
+            $errors = [
+                'code'    => $ex->getCode(),
+                'data'    => $ex->getData(),
+                'message' => $ex->getMessage()
+            ];
+        } catch (\Exception $ex) {
+            $errors = [
+                'code'    => $ex->getCode(),
+                'message' => $ex->getMessage()
+            ];
         }
-        // ### Get redirect url
-        $redirectUrl = $payment->getApprovalLink();
 
         return [
-            'payment_id' => $payment->getId(),
-            'status' => $payment->getState(),
-            'redirect_url' => $redirectUrl,
-            'description' => $transaction->getDescription(),
+            'errors'        => $errors,
+            'payment_id'    => $payment->getId(),
+            'status'        => $payment->getState(),
+            'description'   => $transaction->getDescription(),
+            'redirect_url'  => isset($redirectUrl) ? $redirectUrl : null,
         ];
     }
 

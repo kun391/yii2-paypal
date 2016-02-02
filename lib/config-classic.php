@@ -1,7 +1,8 @@
 <?php
 
 /**
- * Information PAYPAL's enviroments
+ * Information PAYPAL's enviroments.
+ *
  * @var string
  */
 
@@ -20,4 +21,3 @@ return  [
     'acct1.Signature' => 'APP9kKh6roKmPNKj6yBK5oSwdD39ADujX4sfPXjr.hGf1wjRi1THwoVq',
     'mode'            => 'sandbox',
 ];
-

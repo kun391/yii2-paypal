@@ -2,23 +2,22 @@
 
 namespace kun391\paypal;
 
-use PayPal\Rest\ApiContext;
-use PayPal\Auth\OAuthTokenCredential;
-use PayPal\Api\Invoice;
-use PayPal\Api\MerchantInfo;
+use PayPal\Api\Address;
+use PayPal\Api\Amount;
 use PayPal\Api\BillingInfo;
+use PayPal\Api\Currency;
+use PayPal\Api\Invoice;
 use PayPal\Api\InvoiceItem;
-use PayPal\Api\Phone;
-use PayPal\Api\Payer;
 use PayPal\Api\Item;
 use PayPal\Api\ItemList;
-use PayPal\Api\Amount;
-use PayPal\Api\Transaction;
+use PayPal\Api\MerchantInfo;
+use PayPal\Api\Payer;
+use PayPal\Api\Payment;
 use PayPal\Api\PaymentExecution;
 use PayPal\Api\RedirectUrls;
-use PayPal\Api\Payment;
-use PayPal\Api\Address;
-use PayPal\Api\Currency;
+use PayPal\Api\Transaction;
+use PayPal\Auth\OAuthTokenCredential;
+use PayPal\Rest\ApiContext;
 use yii\base\Component;
 
 class RestAPI extends Component
@@ -30,8 +29,10 @@ class RestAPI extends Component
     public $cancelUrl = '';
 
     public $pathFileConfig;
+
     /**
      * @param  $config
+     *
      * @return mixed
      */
     public function __construct($config = [])
@@ -40,7 +41,7 @@ class RestAPI extends Component
 
         //set config default for paypal
         if (!$this->pathFileConfig) {
-            $this->pathFileConfig = __DIR__ . '/config-rest.php';
+            $this->pathFileConfig = __DIR__.'/config-rest.php';
         }
 
         // check file config already exist.
@@ -49,7 +50,7 @@ class RestAPI extends Component
         }
 
         //set config file
-        $this->_credentials = require($this->pathFileConfig);
+        $this->_credentials = require $this->pathFileConfig;
 
         if (!in_array($this->_credentials['config']['mode'], ['sandbox', 'live'])) {
             throw new \Exception('Error Processing Request', 503);
@@ -59,7 +60,7 @@ class RestAPI extends Component
     }
 
     /**
-     * Get api context
+     * Get api context.
      *
      * @return mixed
      */
@@ -92,10 +93,11 @@ class RestAPI extends Component
     private function getBaseUrl()
     {
         if (PHP_SAPI == 'cli') {
-            $trace=debug_backtrace();
+            $trace = debug_backtrace();
             $relativePath = substr(dirname($trace[0]['file']), strlen(dirname(dirname(__FILE__))));
             echo 'Warning: This sample may require a server to handle return URL. Cannot execute in command line. Defaulting URL to http://localhost$relativePath \n';
-            return 'http://localhost' . $relativePath;
+
+            return 'http://localhost'.$relativePath;
         }
         $protocol = 'http';
         if ($_SERVER['SERVER_PORT'] == 443 || (!empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on')) {
@@ -103,7 +105,8 @@ class RestAPI extends Component
         }
         $host = $_SERVER['HTTP_HOST'];
         $request = $_SERVER['PHP_SELF'];
-        return dirname($protocol . '://' . $host . $request);
+
+        return dirname($protocol.'://'.$host.$request);
     }
 
     public function createInvoice($params = null)
@@ -118,7 +121,7 @@ class RestAPI extends Component
         // required for invoice APIs
         $invoice
             ->setMerchantInfo(new MerchantInfo())
-            ->setBillingInfo(array(new BillingInfo()));
+            ->setBillingInfo([new BillingInfo()]);
 
         // ### Merchant Info
         // A resource representing merchant information that can be
@@ -134,7 +137,7 @@ class RestAPI extends Component
 
         $items = [];
         foreach ($params['items'] as $key => $item) {
-            # code...
+            // code...
             $items[$key] = new InvoiceItem();
             $items[$key]
                 ->setName($item['name'])
@@ -142,7 +145,7 @@ class RestAPI extends Component
                 ->setUnitPrice(new Currency());
             $items[$key]->getUnitPrice()
                 ->setCurrency($params['currency'])
-                ->setValue((double) $item['price']);
+                ->setValue((float) $item['price']);
         }
         // ### Items List
         $invoice->setItems($items);
@@ -155,18 +158,18 @@ class RestAPI extends Component
             $errors = [
                 'code'    => $ex->getCode(),
                 'data'    => $ex->getData(),
-                'message' => $ex->getMessage()
+                'message' => $ex->getMessage(),
             ];
         } catch (\Exception $ex) {
             $errors = [
                 'code'    => $ex->getCode(),
-                'message' => $ex->getMessage()
+                'message' => $ex->getMessage(),
             ];
         }
 
         return [
             'errors'    => $errors,
-            'invoices'  => $invoice
+            'invoices'  => $invoice,
         ];
     }
 
@@ -218,14 +221,14 @@ class RestAPI extends Component
         $baseUrl = $this->getBaseUrl();
 
         try {
-            $redirectUrls->setReturnUrl($baseUrl . $this->successUrl)
-                         ->setCancelUrl($baseUrl . $this->cancelUrl);
+            $redirectUrls->setReturnUrl($baseUrl.$this->successUrl)
+                         ->setCancelUrl($baseUrl.$this->cancelUrl);
         } catch (\InvalidArgumentException $ex) {
             return [
                 'errors'        => [
                     'code'    => $ex->getCode(),
-                    'message' => $ex->getMessage()
-                ]
+                    'message' => $ex->getMessage(),
+                ],
             ];
         }
         // ### Payment
@@ -248,12 +251,12 @@ class RestAPI extends Component
             $errors = [
                 'code'    => $ex->getCode(),
                 'data'    => $ex->getData(),
-                'message' => $ex->getMessage()
+                'message' => $ex->getMessage(),
             ];
         } catch (\Exception $ex) {
             $errors = [
                 'code'    => $ex->getCode(),
-                'message' => $ex->getMessage()
+                'message' => $ex->getMessage(),
             ];
         }
 
@@ -266,8 +269,8 @@ class RestAPI extends Component
         ];
     }
 
-    public function getResult($paymentId) {
-
+    public function getResult($paymentId)
+    {
         $payment = Payment::get($paymentId, $this->config);
 
         $execution = new PaymentExecution();
@@ -275,7 +278,7 @@ class RestAPI extends Component
         $payment = $payment->execute($execution, $this->config);
 
         $result = @$payment->toArray();
+
         return $result;
     }
-
 }

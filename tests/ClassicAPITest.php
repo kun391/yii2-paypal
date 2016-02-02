@@ -27,7 +27,6 @@ class ClassicAPITest extends PHPUnit_Framework_TestCase
 
     public function testConstructWithConfig()
     {
-
     }
 
     public function testGetAccountInfoEmptyParams()

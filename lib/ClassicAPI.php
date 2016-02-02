@@ -1,4 +1,5 @@
 <?php
+
 namespace kun391\paypal;
 
 use PayPal\CoreComponentTypes\BasicAmountType;
@@ -18,6 +19,7 @@ class ClassicAPI extends Component
 
     /**
      * @param  $config
+     *
      * @return mixed
      */
     public function init()
@@ -26,17 +28,17 @@ class ClassicAPI extends Component
 
         //set config default for paypal
         if (!$this->pathFileConfig) {
-            $this->pathFileConfig = __DIR__ . '/config-classic.php';
+            $this->pathFileConfig = __DIR__.'/config-classic.php';
         }
         // check file config already exist.
         if (!file_exists($this->pathFileConfig)) {
-            throw new \Exception("File config does not exist.", 500);
+            throw new \Exception('File config does not exist.', 500);
         }
 
         $this->_credentials = require $this->pathFileConfig;
 
         if (!in_array($this->_credentials['mode'], ['sandbox', 'live'])) {
-            throw new \Exception("Error Processing Request", 503);
+            throw new \Exception('Error Processing Request', 503);
         }
 
         return $this->_credentials;
@@ -49,6 +51,7 @@ class ClassicAPI extends Component
 
     /**
      * @param  $params
+     *
      * @return mixed
      */
     public function getAccountInfo(array $params = [])
@@ -58,23 +61,23 @@ class ClassicAPI extends Component
         }
 
         if (!isset($params['email'])) {
-            throw new \Exception("Email cannot be blank.", 400);
+            throw new \Exception('Email cannot be blank.', 400);
         }
 
         $getVerifiedStatus = new GetVerifiedStatusRequest();
         $accountIdentifier = new AccountIdentifierType();
 
-        $accountIdentifier->emailAddress      = $params['email'];
+        $accountIdentifier->emailAddress = $params['email'];
         $getVerifiedStatus->accountIdentifier = $accountIdentifier;
         $getVerifiedStatus->matchCriteria = 'NONE';
 
         if (isset($params['matchCriteria']) && strtolower($params['matchCriteria']) == 'name') {
             $getVerifiedStatus->matchCriteria = 'NAME';
             if (!isset($params['firstName']) || !isset($params['lastName'])) {
-                throw new \Exception("Firstname or lastname cannot be blank.", 400);
+                throw new \Exception('Firstname or lastname cannot be blank.', 400);
             }
             $getVerifiedStatus->firstName = $params['firstName'];
-            $getVerifiedStatus->lastName  = $params['lastName'];
+            $getVerifiedStatus->lastName = $params['lastName'];
         }
 
         $getVerifiedStatus->requestEnvelope = [
@@ -99,17 +102,17 @@ class ClassicAPI extends Component
         }
 
         if (!isset($params['balance'])) {
-            throw new \Exception("Balance cannot be blank.", 400);
+            throw new \Exception('Balance cannot be blank.', 400);
         }
 
-        $massPayReq       = new MassPayReq();
-        $massPayItemArray = array();
+        $massPayReq = new MassPayReq();
+        $massPayItemArray = [];
 
-        $amount                            = new BasicAmountType("USD", $params['balance']);
-        $massPayRequestItem                = new MassPayRequestItemType($amount);
+        $amount = new BasicAmountType('USD', $params['balance']);
+        $massPayRequestItem = new MassPayRequestItemType($amount);
         $massPayRequestItem->ReceiverEmail = $params['email'];
 
-        $massPayRequest             = new MassPayRequestType($massPayRequestItem);
+        $massPayRequest = new MassPayRequestType($massPayRequestItem);
         $massPayReq->MassPayRequest = $massPayRequest;
 
         $service = new PayPalAPIInterfaceServiceService($this->_credentials);

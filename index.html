@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>Yii2-paypal by kun391</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>Yii2-paypal</h1>
+        <h2>Component working with paypal for Yii2</h2>
+        <a href="https://github.com/kun391/yii2-paypal" class="button"><small>View project on</small> GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
+<a id="requirements" class="anchor" href="#requirements" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Requirements</h1>
+
+<ul>
+<li>PHP &gt;= 5.4</li>
+<li>php5-curl (System)</li>
+</ul>
+
+<h1>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation</h1>
+
+<p>Add to the composer.json file following section:</p>
+
+<pre><code>php composer.phar require --prefer-dist kun391/yii2-paypal:"*"
+</code></pre>
+
+<p>or</p>
+
+<pre><code>"kun391/yii2-paypal":"dev-master"
+</code></pre>
+
+<p>Add to to you Yii2 config file this part with component settings:</p>
+
+<blockquote>
+<p>Create file config.php for RESTAPI and config.php for Classic API every where:</p>
+</blockquote>
+
+<ul>
+<li>ClassicAPI</li>
+</ul>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-c">/**</span></span>
+<span class="pl-s1"><span class="pl-c"> * Information PAYPAL's enviroments for classic API</span></span>
+<span class="pl-s1"><span class="pl-c"> * <span class="pl-k">@var</span> string</span></span>
+<span class="pl-s1"><span class="pl-c"> */</span></span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c">// E.g:</span></span>
+<span class="pl-s1"><span class="pl-c">// If enviroment is Development you should use mode = sandbox and endpoint = api.sandbox.paypal.com</span></span>
+<span class="pl-s1"><span class="pl-c">// [</span></span>
+<span class="pl-s1"><span class="pl-c">//     'acct1.UserName'  =&gt; 'nguyentruongthanh.dn-facilitator-1_api1.gmail.com',</span></span>
+<span class="pl-s1"><span class="pl-c">//     'acct1.Password'  =&gt; 'GRHYUV2DJHNBFTAA',</span></span>
+<span class="pl-s1"><span class="pl-c">//     'acct1.Signature' =&gt; 'APP9kKh6roKmPNKj6yBK5oSwdD39ADujX4sfPXjr.hGf1wjRi1THwoVq',</span></span>
+<span class="pl-s1"><span class="pl-c">//     'mode'            =&gt; 'sandbox',</span></span>
+<span class="pl-s1"><span class="pl-c">// ];</span></span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c">// E.g:</span></span>
+<span class="pl-s1"><span class="pl-c">// If enviroment is live you should use mode = live</span></span>
+<span class="pl-s1"><span class="pl-c">// [</span></span>
+<span class="pl-s1"><span class="pl-c">//     'acct1.UserName'  =&gt; 'nguyentruongthanh.dn-facilitator-1_api1.gmail.com',</span></span>
+<span class="pl-s1"><span class="pl-c">//     'acct1.Password'  =&gt; 'GRHYUV2DJHNBFTAA',</span></span>
+<span class="pl-s1"><span class="pl-c">//     'acct1.Signature' =&gt; 'APP9kKh6roKmPNKj6yBK5oSwdD39ADujX4sfPXjr.hGf1wjRi1THwoVq',</span></span>
+<span class="pl-s1"><span class="pl-c">//     'mode'            =&gt; 'live',</span></span>
+<span class="pl-s1"><span class="pl-c">// ];</span></span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">return</span>  [</span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>acct1.UserName<span class="pl-pds">'</span></span>  <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>nguyentruongthanh.dn-facilitator-1_api1.gmail.com<span class="pl-pds">'</span></span>,</span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>acct1.Password<span class="pl-pds">'</span></span>  <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>GRHYUV2DJHNBFTAA<span class="pl-pds">'</span></span>,</span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>acct1.Signature<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>APP9kKh6roKmPNKj6yBK5oSwdD39ADujX4sfPXjr.hGf1wjRi1THwoVq<span class="pl-pds">'</span></span>,</span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>mode<span class="pl-pds">'</span></span>            <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>sandbox<span class="pl-pds">'</span></span>,</span>
+<span class="pl-s1">];</span>
+<span class="pl-s1"></span></pre></div>
+
+<ul>
+<li>RestAPI</li>
+</ul>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-c">/**</span></span>
+<span class="pl-s1"><span class="pl-c"> * Information PAYPAL's enviroments</span></span>
+<span class="pl-s1"><span class="pl-c"> * <span class="pl-k">@var</span> string</span></span>
+<span class="pl-s1"><span class="pl-c"> */</span></span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c">// E.g:</span></span>
+<span class="pl-s1"><span class="pl-c">// If enviroment is Development you should use mode = sandbox and endpoint = api.sandbox.paypal.com</span></span>
+<span class="pl-s1"><span class="pl-c">// $setting = [</span></span>
+<span class="pl-s1"><span class="pl-c">//     'endpoint'       =&gt; 'api.sandbox.paypal.com',</span></span>
+<span class="pl-s1"><span class="pl-c">//     'client_id'      =&gt; 'AV92BhCOYzF4Vejrbphu1ksMn4KYSlvbzCTcbLdOMixBvAS7sQZhOvMNkMoG',</span></span>
+<span class="pl-s1"><span class="pl-c">//     'secret'         =&gt; 'EDdjYm7i8w2XZwWGyTqPfPDJim2dUV1hX_3dhY0fR-HulrENli6043rY_0GO1ro1gnkxVe3bMWNDikvq',</span></span>
+<span class="pl-s1"><span class="pl-c">//     'business_owner' =&gt; 'nguyentruongthanh.dn-facilitator-1@gmail.com',</span></span>
+<span class="pl-s1"><span class="pl-c">// ];</span></span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c">// E.g:</span></span>
+<span class="pl-s1"><span class="pl-c">// If enviroment is live you should use mode = live and endpoint = api.paypal.com</span></span>
+<span class="pl-s1"><span class="pl-c">// $setting = [</span></span>
+<span class="pl-s1"><span class="pl-c">//     'endpoint'       =&gt; 'api.paypal.com',</span></span>
+<span class="pl-s1"><span class="pl-c">//     'client_id'      =&gt; 'AV92BhCOYzF4Vejrbphu1ksMn4KYSlvbzCTcbLdOMixBvAS7sQZhOvMNkMoG',</span></span>
+<span class="pl-s1"><span class="pl-c">//     'secret'         =&gt; 'EDdjYm7i8w2XZwWGyTqPfPDJim2dUV1hX_3dhY0fR-HulrENli6043rY_0GO1ro1gnkxVe3bMWNDikvq',</span></span>
+<span class="pl-s1"><span class="pl-c">//     'business_owner' =&gt; 'nguyentruongthanh.dn-facilitator-1@gmail.com',</span></span>
+<span class="pl-s1"><span class="pl-c">// ];</span></span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-smi">$setting</span> <span class="pl-k">=</span> [</span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>endpoint<span class="pl-pds">'</span></span>       <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>api.sandbox.paypal.com<span class="pl-pds">'</span></span>,</span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>client_id<span class="pl-pds">'</span></span>      <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>AX9sEz0g3cCzD_heoGyedx7LKSuEx1Lx7H8aGXIrzQmDhqV-V5bV0sbVFc195mNKbE81OkAPZZi_7dfa<span class="pl-pds">'</span></span>,</span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>secret<span class="pl-pds">'</span></span>         <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>EDdjYm7i8w2XZwWGyTqPfPDJim2dUV1hX_3dhY0fR-HulrENli6043rY_0GO1ro1gnkxVe3bMWNDikvq<span class="pl-pds">'</span></span>,</span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>business_owner<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>nguyentruongthanh.dn-facilitator-1@gmail.com<span class="pl-pds">'</span></span>,</span>
+<span class="pl-s1">];</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-k">return</span> <span class="pl-c1">\yii\helpers\</span><span class="pl-c1">ArrayHelper</span><span class="pl-k">::</span>merge([<span class="pl-s"><span class="pl-pds">'</span>config<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> [</span>
+<span class="pl-s1">        <span class="pl-s"><span class="pl-pds">'</span>mode<span class="pl-pds">'</span></span>                   <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>sandbox<span class="pl-pds">'</span></span>,</span>
+<span class="pl-s1">        <span class="pl-s"><span class="pl-pds">'</span>http.ConnectionTimeOut<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-c1">60</span>,</span>
+<span class="pl-s1">        <span class="pl-s"><span class="pl-pds">'</span>log.LogEnabled<span class="pl-pds">'</span></span>         <span class="pl-k">=&gt;</span> <span class="pl-c1">false</span>,</span>
+<span class="pl-s1">        <span class="pl-s"><span class="pl-pds">'</span>log.FileName<span class="pl-pds">'</span></span>           <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>@api/runtime/PayPal.log<span class="pl-pds">'</span></span>,</span>
+<span class="pl-s1">        <span class="pl-s"><span class="pl-pds">'</span>log.LogLevel<span class="pl-pds">'</span></span>           <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>FINE<span class="pl-pds">'</span></span>,</span>
+<span class="pl-s1">    ]</span>
+<span class="pl-s1">], <span class="pl-smi">$setting</span>);</span></pre></div>
+
+<blockquote>
+<p>Add to config to component of file main.php:</p>
+</blockquote>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-k">...</span></span>
+<span class="pl-s1"><span class="pl-s"><span class="pl-pds">'</span>payPalClassic<span class="pl-pds">'</span></span>    <span class="pl-k">=&gt;</span> [</span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>class<span class="pl-pds">'</span></span>        <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>kun391\paypal\ClassicAPI<span class="pl-pds">'</span></span>,</span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>pathFileConfig<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>,</span>
+<span class="pl-s1">],</span>
+<span class="pl-s1"><span class="pl-s"><span class="pl-pds">'</span>payPalRest<span class="pl-pds">'</span></span>               <span class="pl-k">=&gt;</span> [</span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>class<span class="pl-pds">'</span></span>        <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>kun391\paypal\RestAPI<span class="pl-pds">'</span></span>,</span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>pathFileConfig<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>,</span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>successUrl<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span> <span class="pl-c">//full url action return url</span></span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>cancelUrl<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span> <span class="pl-c">//full url action return url</span></span>
+<span class="pl-s1">],</span>
+<span class="pl-s1"><span class="pl-k">...</span></span></pre></div>
+
+<h1></h1>
+
+<h1>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h1>
+
+<blockquote>
+<p>REST API</p>
+</blockquote>
+
+<ul>
+<li>Create a invoice with paypal</li>
+</ul>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-c">//define params for request </span></span>
+<span class="pl-s1"><span class="pl-smi">$params</span> <span class="pl-k">=</span> [</span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>currency<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>Usd<span class="pl-pds">'</span></span>, <span class="pl-c">// only support currency same PayPal</span></span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>email<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>nguyentruongthanh.dn@gmail.com<span class="pl-pds">'</span></span>,</span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>items<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> [</span>
+<span class="pl-s1">        [</span>
+<span class="pl-s1">            <span class="pl-s"><span class="pl-pds">'</span>name<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>Vinamilk<span class="pl-pds">'</span></span>,</span>
+<span class="pl-s1">            <span class="pl-s"><span class="pl-pds">'</span>quantity<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-c1">2</span>,</span>
+<span class="pl-s1">            <span class="pl-s"><span class="pl-pds">'</span>price<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-c1">100</span></span>
+<span class="pl-s1">        ],</span>
+<span class="pl-s1">        [</span>
+<span class="pl-s1">            <span class="pl-s"><span class="pl-pds">'</span>name<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>Pepsi<span class="pl-pds">'</span></span>,</span>
+<span class="pl-s1">            <span class="pl-s"><span class="pl-pds">'</span>quantity<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-c1">3</span>,</span>
+<span class="pl-s1">            <span class="pl-s"><span class="pl-pds">'</span>price<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-c1">90</span></span>
+<span class="pl-s1">        ]</span>
+<span class="pl-s1">    ]</span>
+<span class="pl-s1">];</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c">// information invoice response</span></span>
+<span class="pl-s1"><span class="pl-smi">$response</span> <span class="pl-k">=</span> <span class="pl-c1">Yii</span><span class="pl-k">::</span><span class="pl-smi">$app</span><span class="pl-k">-&gt;</span><span class="pl-smi">payPalRest</span><span class="pl-k">-&gt;</span>createInvoice(<span class="pl-smi">$params</span>);</span></pre></div>
+
+<ul>
+<li>Get link checkout on PayPal</li>
+</ul>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-c">//define params for request </span></span>
+<span class="pl-s1"><span class="pl-smi">$params</span> <span class="pl-k">=</span> [</span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>currency<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>USD<span class="pl-pds">'</span></span>, <span class="pl-c">// only support currency same PayPal</span></span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>description<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>Buy some item<span class="pl-pds">'</span></span>,</span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>total_price<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-c1">470</span>,</span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>email<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>nguyentruongthanh.dn@gmail.com<span class="pl-pds">'</span></span>,</span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>items<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> [</span>
+<span class="pl-s1">        [</span>
+<span class="pl-s1">            <span class="pl-s"><span class="pl-pds">'</span>name<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>Vinamilk<span class="pl-pds">'</span></span>,</span>
+<span class="pl-s1">            <span class="pl-s"><span class="pl-pds">'</span>quantity<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-c1">2</span>,</span>
+<span class="pl-s1">            <span class="pl-s"><span class="pl-pds">'</span>price<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-c1">100</span></span>
+<span class="pl-s1">        ],</span>
+<span class="pl-s1">        [</span>
+<span class="pl-s1">            <span class="pl-s"><span class="pl-pds">'</span>name<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>Pepsi<span class="pl-pds">'</span></span>,</span>
+<span class="pl-s1">            <span class="pl-s"><span class="pl-pds">'</span>quantity<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-c1">3</span>,</span>
+<span class="pl-s1">            <span class="pl-s"><span class="pl-pds">'</span>price<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-c1">90</span></span>
+<span class="pl-s1">        ]</span>
+<span class="pl-s1">    ]</span>
+<span class="pl-s1">];</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-smi">$response</span> <span class="pl-k">=</span> <span class="pl-c1">Yii</span><span class="pl-k">::</span><span class="pl-smi">$app</span><span class="pl-k">-&gt;</span><span class="pl-smi">payPalRest</span><span class="pl-k">-&gt;</span>getLinkCheckOut(<span class="pl-smi">$params</span>);</span></pre></div>
+
+<blockquote>
+<p>CLASSIC API</p>
+</blockquote>
+
+<ul>
+<li>Get Information Account</li>
+</ul>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-c1">Attribute</span> <span class="pl-c1">matchCriteria</span> <span class="pl-c1">you</span> <span class="pl-c1">can</span> <span class="pl-c1">specify</span> <span class="pl-c1">either</span> <span class="pl-c1">NAME</span> <span class="pl-k">or</span> <span class="pl-c1">NONE</span><span class="pl-k">.</span> <span class="pl-c1">Default</span>: <span class="pl-c1">None</span></span>
+<span class="pl-s1"><span class="pl-c1">Attribute</span> <span class="pl-c1">firstName</span> <span class="pl-k">and</span> lastName (<span class="pl-c1">Required</span>) <span class="pl-k">if</span> <span class="pl-c1">matchCriteria</span> <span class="pl-c1">is</span> <span class="pl-c1">name</span><span class="pl-k">.</span></span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-smi">$params</span> <span class="pl-k">=</span> [</span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>email<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>nguyentruongthanh.dn@gmail.com<span class="pl-pds">'</span></span>,</span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>matchCriteria<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>name<span class="pl-pds">'</span></span>,</span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>firstName<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>Thanh<span class="pl-pds">'</span></span>,</span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>lastName<span class="pl-pds">'</span></span>  <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>Nguyen<span class="pl-pds">'</span></span></span>
+<span class="pl-s1">];</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-smi">$response</span> <span class="pl-k">=</span> <span class="pl-c1">Yii</span><span class="pl-k">::</span><span class="pl-smi">$app</span><span class="pl-k">-&gt;</span><span class="pl-smi">payPalClassic</span><span class="pl-k">-&gt;</span>getAccountInfo(<span class="pl-smi">$params</span>);</span></pre></div>
+
+<ul>
+<li>Send money (Mass Pay)</li>
+</ul>
+
+<div class="highlight highlight-text-html-php"><pre><span class="pl-s1"><span class="pl-smi">$params</span> <span class="pl-k">=</span> [</span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>email<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-s"><span class="pl-pds">'</span>nguyentruongthanh.dn@gmail.com<span class="pl-pds">'</span></span>,</span>
+<span class="pl-s1">    <span class="pl-s"><span class="pl-pds">'</span>balance<span class="pl-pds">'</span></span> <span class="pl-k">=&gt;</span> <span class="pl-c1">200</span>,</span>
+<span class="pl-s1">];</span>
+<span class="pl-s1"></span>
+<span class="pl-s1"><span class="pl-smi">$response</span> <span class="pl-k">=</span> <span class="pl-c1">Yii</span><span class="pl-k">::</span><span class="pl-smi">$app</span><span class="pl-k">-&gt;</span><span class="pl-smi">payPalClassic</span><span class="pl-k">-&gt;</span>sendMoney(<span class="pl-smi">$params</span>);</span>
+<span class="pl-s1"><span class="pl-s"><span class="pl-pds">`</span><span class="pl-pds">`</span></span></span></pre></div>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/kun391/yii2-paypal/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/kun391/yii2-paypal/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/kun391/yii2-paypal"></a> is maintained by <a href="https://github.com/kun391">kun391</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  
+  </body>
+</html>

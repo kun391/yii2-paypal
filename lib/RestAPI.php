@@ -44,12 +44,12 @@ class RestAPI extends Component
         }
 
         // check file config already exist.
-        if (!file_exists($this->pathFileConfig)) {
-            throw new \Exception('File config does not exist.', 500);
+        if (!file_exists(\Yii::getAlias($this->pathFileConfig))) {
+            throw new \Exception('File config does not exist:'.$this->pathFileConfig, 500);
         }
 
         //set config file
-        $this->_credentials = require($this->pathFileConfig);
+        $this->_credentials = require(\Yii::getAlias($this->pathFileConfig));
 
         if (!in_array($this->_credentials['config']['mode'], ['sandbox', 'live'])) {
             throw new \Exception('Error Processing Request', 503);

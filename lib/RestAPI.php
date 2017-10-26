@@ -50,6 +50,9 @@ class RestAPI extends Component
 
         //set config file
         $this->_credentials = require($this->pathFileConfig);
+        if(array_key_exists('log.FileName', $this->_credentials['config'])){
+            $this->_credentials['config']['log.FileName']=\Yii::getAlias($this->_credentials['config']['log.FileName']);
+        }
 
         if (!in_array($this->_credentials['config']['mode'], ['sandbox', 'live'])) {
             throw new \Exception('Error Processing Request', 503);

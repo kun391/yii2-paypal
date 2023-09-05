@@ -1,7 +1,8 @@
 <?php
 
 /**
- * Information PAYPAL's enviroments
+ * Information PAYPAL's enviroments.
+ *
  * @var string
  */
 
@@ -13,8 +14,6 @@
 //     'secret'         => 'EDdjYm7i8w2XZwWGyTqPfPDJim2dUV1hX_3dhY0fR-HulrENli6043rY_0GO1ro1gnkxVe3bMWNDikvq',
 //     'business_owner' => 'nguyentruongthanh.dn-facilitator-1@gmail.com',
 // ];
-
-
 
 $setting = [
     'endpoint'       => 'api.sandbox.paypal.com',
@@ -29,6 +28,5 @@ return \yii\helpers\ArrayHelper::merge(['config' => [
         'log.LogEnabled'         => false,
         'log.FileName'           => '@api/runtime/PayPal.log',
         'log.LogLevel'           => 'FINE',
-    ]
+    ],
 ], $setting);
-
